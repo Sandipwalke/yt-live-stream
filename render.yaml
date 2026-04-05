@@ -1,0 +1,6 @@
+services:
+  - type: worker
+    name: yt-red-stream
+    env: docker
+    plan: free
+    autoDeploy: true
