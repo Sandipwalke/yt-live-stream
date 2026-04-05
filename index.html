@@ -185,6 +185,7 @@
         const command = `ffmpeg -re \\
   -f lavfi -i "color=c=red:s=${resolution}:r=${fps}" \\
   -f lavfi -i "anullsrc=channel_layout=stereo:sample_rate=44100" \\
+  -map 0:v:0 -map 1:a:0 \\
   -c:v libx264 -pix_fmt yuv420p -preset veryfast -tune zerolatency \\
   -b:v ${vb}k -maxrate ${vb}k -bufsize ${vb * 2}k -g ${fps * 2} \\
   -c:a aac -b:a ${ab}k -ar 44100 -ac 2 \\
