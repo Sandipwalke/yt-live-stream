@@ -9,7 +9,7 @@ This repository is now packaged to run a **continuous red-screen YouTube stream*
 ## Files
 
 - `stream.sh` – starts infinite FFmpeg red-screen stream to YouTube primary + backup RTMP
-- `Dockerfile` – builds the streaming container with FFmpeg
+- `Dockerfile` – builds the streaming container with FFmpeg and overrides the base image entrypoint so `stream.sh` is executed (not `ffmpeg /app/stream.sh`)
 - `render.yaml` – Render Blueprint definition for a Docker worker service
 
 ## Hardcoded stream key
