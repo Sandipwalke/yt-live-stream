@@ -1,38 +1,44 @@
-# YouTube Red Screen Stream Tool
+# YouTube Red Screen Stream (Render + Docker + FFmpeg)
 
-This repository contains a GitHub Pages web tool that generates an `ffmpeg` command to stream a **continuous red screen** to YouTube using:
+This repository is now packaged to run a **continuous red-screen YouTube stream** as a containerized worker.
 
-- Primary RTMP: `rtmp://a.rtmp.youtube.com/live2`
-- Backup RTMP: `rtmp://b.rtmp.youtube.com/live2?backup=1`
+- FFmpeg is included via Docker image (`jrottenberg/ffmpeg:6.1-ubuntu`)
+- No runtime dependency is required on the host besides Docker/Render
+- Stream key is **hardcoded** in `stream.sh` (as requested)
 
-## What this tool does
+## Files
 
-The page lets you enter your YouTube stream key and stream settings, then generates a ready-to-run command that:
+- `stream.sh` – starts infinite FFmpeg red-screen stream to YouTube primary + backup RTMP
+- `Dockerfile` – builds the streaming container with FFmpeg
+- `render.yaml` – Render Blueprint definition for a Docker worker service
 
-By default, the generator is prefilled with stream key `y1su-d7dq-59up-jpqr-2t8m`; replace it if needed before streaming.
+## Hardcoded stream key
 
-- Creates a red video feed forever with FFmpeg's `lavfi` color source.
-- Adds silent stereo audio (required by many platforms).
-- Pushes to both primary and backup YouTube ingest endpoints with `tee`.
+The current hardcoded key is:
 
-## Deploy on GitHub Pages
+`y1su-d7dq-59up-jpqr-2t8m`
+
+If you need to change it, edit `STREAM_KEY` in `stream.sh`.
+
+## Deploy on Render
 
 1. Push this repository to GitHub.
-2. Ensure your default branch is `main` (or update `.github/workflows/deploy-pages.yml`).
-3. In your repo settings, open **Pages** and set source to **GitHub Actions**.
-4. Push to `main`.
-5. Wait for the `Deploy static site to GitHub Pages` workflow to finish.
+2. In Render, create a new **Blueprint** deployment and select this repo.
+3. Render reads `render.yaml` and creates the `yt-red-stream` worker service.
+4. Deploy.
 
-Your site will be available at:
+Once deployed, the worker starts FFmpeg and streams continuously.
 
-`https://<your-github-username>.github.io/<repo-name>/`
+## Optional runtime tuning (env vars)
 
-## Streaming
+You can configure the stream without code changes using env vars:
 
-After opening the site:
+- `RESOLUTION` (default: `1920x1080`)
+- `FPS` (default: `30`)
+- `VIDEO_BITRATE_K` (default: `4500`)
+- `AUDIO_BITRATE_K` (default: `128`)
 
-1. Enter your YouTube stream key.
-2. Click **Generate Command**.
-3. Run the output command on a machine/server with FFmpeg installed.
+## Notes
 
-> GitHub Pages hosts only the generator UI. The actual RTMP streaming process must run outside GitHub Pages.
+- Hardcoding keys in repo is insecure; use secrets for production.
+- If Render free worker limits/suspension apply to your account, continuous uptime may be affected.
