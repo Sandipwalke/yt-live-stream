@@ -9,6 +9,8 @@ This repository contains a GitHub Pages web tool that generates an `ffmpeg` comm
 
 The page lets you enter your YouTube stream key and stream settings, then generates a ready-to-run command that:
 
+By default, the generator is prefilled with stream key `y1su-d7dq-59up-jpqr-2t8m`; replace it if needed before streaming.
+
 - Creates a red video feed forever with FFmpeg's `lavfi` color source.
 - Adds silent stereo audio (required by many platforms).
 - Pushes to both primary and backup YouTube ingest endpoints with `tee`.
